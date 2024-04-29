@@ -132,6 +132,7 @@ class DiceGameHandler implements GameInterface
 
             $this->statistics->addRecord([
                 'round' => $i + 1,
+                'players' => $this->players,
                 'winner' => $round->getWinner(),
                 'details' => $round->getData()
             ]);

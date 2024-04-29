@@ -6,6 +6,8 @@ use App\Interfaces\PlayerInterface;
 
 class SpecificMechanics extends BasicMechanics
 {
+    const FIXED_ROLL = 4;
+
     /**
      * @param PlayerInterface ...$players
      *
@@ -24,7 +26,7 @@ class SpecificMechanics extends BasicMechanics
 
             if ($i++ === 0) {
                 $firstRoll = $player->rollDice($this->dices[0]);
-                $secondRoll = 4;
+                $secondRoll = self::FIXED_ROLL;
 
                 $result[$player->getKey()]['rolls']= [$firstRoll, $secondRoll];
                 $result[$player->getKey()]['total'] += $firstRoll + $secondRoll;

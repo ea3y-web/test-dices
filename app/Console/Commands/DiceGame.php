@@ -44,9 +44,8 @@ class DiceGame extends Command
 
         $this->line("Game statistics:");
 
-        foreach ($handler->getStatistics()->getRecords() as $record) {
-            dump($record);
-            //$this->line($player->getName() . " - Wins: {$data['wins']}, Draws: {$data['draws']}");
+        foreach ($handler->getStatistics()->byPlayer() as $player => $stats) {
+            $this->line($player . " - Wins: {$stats['wins']}, Draws: {$stats['draws']}");
         }
 
         $this->line("Winner is: " . $handler->getWinner()->getName());
