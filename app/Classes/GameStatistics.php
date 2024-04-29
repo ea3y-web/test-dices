@@ -30,12 +30,4 @@ class GameStatistics implements StatisticsInterface
     {
         return $this->records;
     }
-
-    /**
-     * @return void
-     */
-    public function print()
-    {
-        dump($this->records);
-    }
 }

@@ -13,11 +13,17 @@ class GamePlayer implements PlayerInterface
     private string $key;
 
     /**
+     * @var string
+     */
+    private string $name;
+
+    /**
      * @return void
      */
     public function __construct()
     {
         $this->key = Str::random(8);
+        $this->name = fake()->name();
     }
 
     /**
@@ -26,6 +32,14 @@ class GamePlayer implements PlayerInterface
     public function getKey(): string
     {
         return $this->key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**

@@ -4,14 +4,20 @@ namespace App\Classes;
 
 use App\Interfaces\GameInterface;
 use App\Interfaces\PlayerInterface;
+use App\Interfaces\RulesInterface;
 use App\Interfaces\StatisticsInterface;
 
-class GameHandler implements GameInterface
+class DiceGameHandler implements GameInterface
 {
     /**
      * @var StatisticsInterface
      */
     protected StatisticsInterface $statistics;
+
+    /**
+     * @var RulesInterface
+     */
+    protected RulesInterface $rules;
 
     /**
      * @var Dice[]
@@ -48,6 +54,26 @@ class GameHandler implements GameInterface
     }
 
     /**
+     * @param RulesInterface $rules
+     *
+     * @return self
+     */
+    public function setRules(RulesInterface $rules): self
+    {
+        $this->rules = $rules;
+
+        return $this;
+    }
+
+    /**
+     * @return RulesInterface
+     */
+    public function getRules(): RulesInterface
+    {
+        return $this->rules;
+    }
+
+    /**
      * @return array
      */
     public function getDices(): array
@@ -65,6 +91,14 @@ class GameHandler implements GameInterface
         $this->rounds = $value > 0 ? $value : 1;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRounds(): int
+    {
+        return $this->rounds;
     }
 
     /**
@@ -99,6 +133,7 @@ class GameHandler implements GameInterface
             $winner = $round->getWinner();
 
             $this->statistics->addRecord([
+                'round' => $i + 1,
                 'winner' => $winner ? $winner->getKey() : null,
                 'details' => $round->getData()
             ]);

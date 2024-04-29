@@ -15,9 +15,4 @@ interface StatisticsInterface
      * @return array
      */
     public function getRecords(): array;
-
-    /**
-     * @return void
-     */
-    public function print();
 }

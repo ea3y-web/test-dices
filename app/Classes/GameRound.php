@@ -35,19 +35,10 @@ class GameRound implements RoundInterface
      */
     public function run()
     {
-        foreach ($this->context->getPlayers() as $player) {
-            $playerRolls = [];
+        $mechanics = $this->context->getRules()->getTurnMechanics();
 
-            foreach ($this->context->getDices() as $key => $dice) {
-                $playerRolls[] = $player->rollDice($dice);
-            }
-
-            $this->data[] = [
-                'player' => $player->getKey(),
-                'rolls' => $playerRolls,
-                'total' => array_sum($playerRolls)
-            ];
-        }
+        $this->data = $mechanics->withDices(...$this->context->getDices())
+            ->execute(...$this->context->getPlayers());
     }
 
     /**
@@ -63,22 +54,8 @@ class GameRound implements RoundInterface
      */
     public function getWinner(): ?PlayerInterface
     {
-        $maxScore = 0;
-        $winner = '';
+        $winner = $this->context->getRules()->determineRoundWinner($this);
 
-        foreach ($this->data as $item) {
-            if ($item['total'] > $maxScore) {
-                $maxScore = $item['total'];
-                $winner = $item['player'];
-            }
-        }
-
-        foreach ($this->context->getPlayers() as $player) {
-            if ($player->getKey() === $winner) {
-                return $player;
-            }
-        }
-
-        return null;
+        return isset($winner) ? $this->context->getPlayers()[$winner] : null;
     }
 }
