@@ -94,13 +94,12 @@ class GameHandler implements GameInterface
     {
         for ($i = 0; $i < $this->rounds; $i++) {
             $round = new GameRound;
-            $round->setContext($this);
-            $round->playersTakeTurns();
+            $round->setContext($this)->run();
 
             $winner = $round->getWinner();
 
             $this->statistics->addRecord([
-                'winner' => $winner ? $winner->getKey() : 'draw',
+                'winner' => $winner ? $winner->getKey() : null,
                 'details' => $round->getData()
             ]);
         }
@@ -112,14 +111,13 @@ class GameHandler implements GameInterface
     public function getWinner(): ?PlayerInterface
     {
         $rating = [];
-        $maxScore = 0;
 
         foreach ($this->players as $player) {
             $rating[$player->getKey()] = 0;
         }
 
         foreach ($this->statistics->getRecords() as $record) {
-            if ($record['winner'] !== 'draw') {
+            if (isset($record['winner'])) {
                 $rating[$record['winner']]++;
             }
         }

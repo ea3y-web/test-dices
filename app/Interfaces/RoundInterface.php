@@ -14,7 +14,7 @@ interface RoundInterface
     /**
      * @return void
      */
-    public function playersTakeTurns();
+    public function run();
 
     /**
      * @return array

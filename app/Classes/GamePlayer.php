@@ -37,9 +37,4 @@ class GamePlayer implements PlayerInterface
     {
         return $dice->roll();
     }
-
-    public function play()
-    {
-
-    }
 }

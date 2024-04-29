@@ -33,7 +33,7 @@ class GameRound implements RoundInterface
     /**
      * @return void
      */
-    public function playersTakeTurns()
+    public function run()
     {
         foreach ($this->context->getPlayers() as $player) {
             $playerRolls = [];
@@ -64,17 +64,17 @@ class GameRound implements RoundInterface
     public function getWinner(): ?PlayerInterface
     {
         $maxScore = 0;
-        $leader = '';
+        $winner = '';
 
         foreach ($this->data as $item) {
             if ($item['total'] > $maxScore) {
                 $maxScore = $item['total'];
-                $leader = $item['player'];
+                $winner = $item['player'];
             }
         }
 
         foreach ($this->context->getPlayers() as $player) {
-            if ($player->getKey() === $leader) {
+            if ($player->getKey() === $winner) {
                 return $player;
             }
         }
