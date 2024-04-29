@@ -5,12 +5,12 @@ namespace App\Classes;
 use App\Interfaces\MechanicsInterface;
 use App\Interfaces\PlayerInterface;
 
-class BasicMechanics implements MechanicsInterface
+abstract class BasicMechanics implements MechanicsInterface
 {
     /**
      * @var array
      */
-    private array $dices;
+    protected array $dices;
 
     /**
      * @param Dice ...$dices

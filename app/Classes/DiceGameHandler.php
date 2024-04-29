@@ -130,11 +130,9 @@ class DiceGameHandler implements GameInterface
             $round = new GameRound;
             $round->setContext($this)->run();
 
-            $winner = $round->getWinner();
-
             $this->statistics->addRecord([
                 'round' => $i + 1,
-                'winner' => $winner ? $winner->getKey() : null,
+                'winner' => $round->getWinner(),
                 'details' => $round->getData()
             ]);
         }
@@ -153,10 +151,12 @@ class DiceGameHandler implements GameInterface
 
         foreach ($this->statistics->getRecords() as $record) {
             if (isset($record['winner'])) {
-                $rating[$record['winner']]++;
+                $rating[$record['winner']->getKey()]++;
             }
         }
 
-        dd($rating);
+        arsort($rating);
+
+        return $this->players[array_key_first($rating)];
     }
 }
