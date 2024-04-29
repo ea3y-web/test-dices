@@ -1,0 +1,26 @@
+// https://aka.ms/devcontainer.json
+{
+	"name": "Test App",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "laravel.test",
+	"workspaceFolder": "/var/www/html",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"bmewburn.vscode-intelephense-client",
+				"ronvanderheijden.phpdoc-generator",
+				"bradlc.vscode-tailwindcss",
+				"mikestead.dotenv",
+				"ryannaddy.laravel-artisan"
+			],
+			"settings": {}
+		}
+	},
+	"remoteUser": "sail",
+	"postCreateCommand": "chown -R sail:sail /var/www/html 2>/dev/null || true"
+	// "forwardPorts": [],
+	// "runServices": [],
+	// "shutdownAction": "none",
+}
