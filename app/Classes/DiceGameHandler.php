@@ -12,17 +12,12 @@ class DiceGameHandler implements GameInterface
     /**
      * @var StatisticsInterface
      */
-    protected StatisticsInterface $statistics;
+    protected StatisticsInterface $history;
 
     /**
      * @var RulesInterface
      */
     protected RulesInterface $rules;
-
-    /**
-     * @var Dice[]
-     */
-    protected array $dices;
 
     /**
      * @var int
@@ -37,10 +32,9 @@ class DiceGameHandler implements GameInterface
     /**
      * @return void
      */
-    public function __construct(StatisticsInterface $statistics)
+    public function __construct(StatisticsInterface $history)
     {
-        $this->statistics = $statistics;
-        $this->dices = [new Dice, new Dice];
+        $this->history = $history;
         $this->rounds = 100;
         $this->players = [];
     }
@@ -50,7 +44,7 @@ class DiceGameHandler implements GameInterface
      */
     public function getStatistics(): StatisticsInterface
     {
-        return $this->statistics;
+        return $this->history;
     }
 
     /**
@@ -74,11 +68,23 @@ class DiceGameHandler implements GameInterface
     }
 
     /**
-     * @return array
+     * @param PlayerInterface $player
+     *
+     * @return self
      */
-    public function getDices(): array
+    public function addPlayer(PlayerInterface $player): self
     {
-        return $this->dices;
+        $this->players[$player->getKey()] = $player;
+
+        return $this;
+    }
+
+    /**
+     * @return PlayerInterface[]
+     */
+    public function getPlayers(): array
+    {
+        return $this->players;
     }
 
     /**
@@ -102,62 +108,44 @@ class DiceGameHandler implements GameInterface
     }
 
     /**
-     * @param PlayerInterface $player
-     *
-     * @return self
-     */
-    public function addPlayer(PlayerInterface $player): self
-    {
-        $this->players[$player->getKey()] = $player;
-
-        return $this;
-    }
-
-    /**
-     * @return PlayerInterface[]
-     */
-    public function getPlayers(): array
-    {
-        return $this->players;
-    }
-
-    /**
      * @return void
      */
-    public function play()
+    public function run()
     {
         for ($i = 0; $i < $this->rounds; $i++) {
             $round = new GameRound;
-            $round->setContext($this)->run();
+            $this->progress[] = $round;
 
-            $this->statistics->addRecord([
-                'round' => $i + 1,
-                'players' => $this->players,
-                'winner' => $round->getWinner(),
-                'details' => $round->getData()
+            $round->setContext($this)->play();
+            $this->history->addRecord([
+                'round'     => $i + 1,
+                'players'   => $this->players,
+                'winner'    => $round->getWinner(),
+                'details'   => $round->getData()
             ]);
         }
     }
 
     /**
-     * @return ?PlayerInterface
+     * @return PlayerInterface|null
      */
     public function getWinner(): ?PlayerInterface
     {
-        $rating = [];
+        $rating = array_combine(
+            array_keys($this->players),
+            array_fill(0, count($this->players), 0)
+        );
 
-        foreach ($this->players as $player) {
-            $rating[$player->getKey()] = 0;
-        }
-
-        foreach ($this->statistics->getRecords() as $record) {
-            if (isset($record['winner'])) {
-                $rating[$record['winner']->getKey()]++;
+        foreach ($this->history->getRecords() as $data) {
+            if (isset($data['winner'])) {
+                $rating[$data['winner']->getKey()] += 1;
             }
         }
 
         arsort($rating);
 
-        return $this->players[array_key_first($rating)];
+        return end($rating) === reset($rating)
+            ? null
+            : $this->players[array_key_first($rating)];
     }
 }

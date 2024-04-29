@@ -30,24 +30,36 @@ class DiceGame extends Command
      */
     public function handle(DiceGameHandler $handler)
     {
+        // Get input.
         $rounds = $this->option('rounds');
         $players = $this->option('players');
 
-        $this->line("Start dice game for $players players for $rounds rounds.");
-
+        // Init game.
         for ($i = 0; $i < $players; $i++) {
             $handler->addPlayer(new GamePlayer);
         }
 
         $handler->setRules(new ClassicRules)->setRounds($rounds);
-        $handler->play();
 
+        // Play game.
+        $this->line("Start dice game for $players players for $rounds rounds.");
+        $handler->run();
+        $this->line("Game finished.");
+
+        // Show statistics.
         $this->line("Game statistics:");
 
         foreach ($handler->getStatistics()->byPlayer() as $player => $stats) {
             $this->line($player . " - Wins: {$stats['wins']}, Draws: {$stats['draws']}");
         }
 
-        $this->line("Winner is: " . $handler->getWinner()->getName());
+        // Show winner.
+        $winner = $handler->getWinner();
+
+        if (isset($winner)) {
+            $this->line("Winner is: " . $winner->getName());
+        } else {
+            $this->line("It's a draw!");
+        }
     }
 }

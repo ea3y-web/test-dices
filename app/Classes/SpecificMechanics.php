@@ -6,6 +6,7 @@ use App\Interfaces\PlayerInterface;
 
 class SpecificMechanics extends BasicMechanics
 {
+    const FIXED_PLAYER = 0;
     const FIXED_ROLL = 4;
 
     /**
@@ -18,26 +19,25 @@ class SpecificMechanics extends BasicMechanics
         $result = [];
         $i = 0;
 
-        foreach ($players as $key => $player) {
-            $result[$player->getKey()] = [
+        foreach ($players as $player) {
+            $key = $player->getKey();
+            $result[$key] = [
                 'rolls' => [],
                 'total' => 0
             ];
 
-            if ($i++ === 0) {
+            if ($i++ === self::FIXED_PLAYER) {
                 $firstRoll = $player->rollDice($this->dices[0]);
                 $secondRoll = self::FIXED_ROLL;
-
-                $result[$player->getKey()]['rolls']= [$firstRoll, $secondRoll];
-                $result[$player->getKey()]['total'] += $firstRoll + $secondRoll;
+                $result[$key]['rolls'] = [$firstRoll, $secondRoll];
             } else {
                 foreach ($this->dices as $dice) {
                     $value = $player->rollDice($dice);
-
-                    $result[$player->getKey()]['rolls'][] = $value;
-                    $result[$player->getKey()]['total'] += $value;
+                    $result[$key]['rolls'][] = $value;
                 }
             }
+
+            $result[$key]['total'] += array_sum($result[$key]['rolls']);
         }
 
         return $result;

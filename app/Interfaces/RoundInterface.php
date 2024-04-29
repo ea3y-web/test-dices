@@ -14,7 +14,7 @@ interface RoundInterface
     /**
      * @return void
      */
-    public function run();
+    public function play();
 
     /**
      * @return array

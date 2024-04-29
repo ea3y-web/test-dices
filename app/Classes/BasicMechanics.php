@@ -8,20 +8,18 @@ use App\Interfaces\PlayerInterface;
 abstract class BasicMechanics implements MechanicsInterface
 {
     /**
-     * @var array
+     * @var Dice[]
      */
     protected array $dices;
 
     /**
      * @param Dice ...$dices
      *
-     * @return self
+     * @return void
      */
-    public function withDices(Dice ...$dices): self
+    public function __construct(Dice ...$dices)
     {
         $this->dices = $dices;
-
-        return $this;
     }
 
     /**

@@ -13,7 +13,7 @@ class ClassicRules implements RulesInterface
      */
     public function getTurnMechanics(): MechanicsInterface
     {
-        return new SpecificMechanics;
+        return new SpecificMechanics(new Dice, new Dice);
     }
 
     /**
@@ -34,10 +34,12 @@ class ClassicRules implements RulesInterface
             $playerHighestRolls[$player] = max($result['rolls']);
         }
 
-        arsort($playerHighestRolls);
+        if (count($playerHighestRolls) > 1) {
+            arsort($playerHighestRolls);
 
-        if (count($playerHighestRolls) > 1 && reset($playerHighestRolls) === end($playerHighestRolls)) {
-            return null;
+            if (end($playerHighestRolls) === reset($playerHighestRolls)) {
+                return null;
+            }
         }
 
         return array_key_first($playerHighestRolls);

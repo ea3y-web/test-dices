@@ -33,12 +33,11 @@ class GameRound implements RoundInterface
     /**
      * @return void
      */
-    public function run()
+    public function play()
     {
         $mechanics = $this->context->getRules()->getTurnMechanics();
 
-        $this->data = $mechanics->withDices(...$this->context->getDices())
-            ->execute(...$this->context->getPlayers());
+        $this->data = $mechanics->execute(...$this->context->getPlayers());
     }
 
     /**

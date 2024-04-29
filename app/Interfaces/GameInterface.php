@@ -5,6 +5,18 @@ namespace App\Interfaces;
 interface GameInterface
 {
     /**
+     * @param RulesInterface $rules
+     *
+     * @return self
+     */
+    public function setRules(RulesInterface $rules): self;
+
+    /**
+     * @return RulesInterface
+     */
+    public function getRules(): RulesInterface;
+
+    /**
      * @param PlayerInterface $player
      *
      * @return self
@@ -17,14 +29,7 @@ interface GameInterface
     public function getPlayers(): array;
 
     /**
-     * @param int $rounds
-     *
-     * @return self
+     * @return void
      */
-    public function setRounds(int $rounds): self;
-
-    /**
-     * @return int
-     */
-    public function getRounds(): int;
+    public function run();
 }
